@@ -70,7 +70,7 @@ class AbsensiCrudController extends Controller
                 return response()->json([
                     'message' => "Failed " . $e
                 ]);
-            }
+        }
     }
 
     /**
@@ -116,5 +116,18 @@ class AbsensiCrudController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+
+//    Filtering
+
+    public function listAbsensi(Request $request)
+    {
+        $list = TrxAbsensi::with(['karyawan'])->where('keterangan', "=", $request->keterangan)->orderBy('created_at', 'DESC')->get();
+
+        return response()->json([
+            'message' => 'List Absensi Masuk',
+            'data' => $list
+        ], 200);
     }
 }

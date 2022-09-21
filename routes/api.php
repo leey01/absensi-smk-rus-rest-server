@@ -2,14 +2,10 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Me;
 use App\Http\Controllers\AbsensiCrudController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\KaryawanController;
 
-// forgot pass
-use App\Http\Controllers\ForgotPasswordController;
-use App\Http\Controllers\ResetPasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,18 +22,22 @@ use App\Http\Controllers\ResetPasswordController;
 
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
-//    Get Karyawan
-    Route::get('/me', [Me::class, 'index']);
+//    Get me
+    Route::get('/me', [KaryawanController::class, 'me']);
 
     // Route post
     Route::post('/post', [AbsensiCrudController::class, 'store']);
+
     Route::post('/logout', [AuthController::class, 'logout']);
 
 //    Route Request
     Route::get('/karyawan', [KaryawanController::class, 'index']);
 
-    Route::post('password/reset-password', [ResetPasswordController::class, 'sendResetResponse'])->name('passwords.reset');
+    Route::post('password/reset-password', [KaryawanController::class, 'resetPassword'])->name('passwords.reset');
+
 });
+//    Route Absensi
+    Route::get('/absensi', [AbsensiCrudController::class, 'listAbsensi']);
 
 
 //Route Login & Register
