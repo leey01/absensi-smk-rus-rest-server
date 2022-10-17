@@ -9,7 +9,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
-class AbsensiCrudController extends Controller
+class AbsensiController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -120,7 +120,7 @@ class AbsensiCrudController extends Controller
 
 
 //    Filtering
-
+//    Filter Masuk Pulang
     public function listAbsensi(Request $request)
     {
         $list = TrxAbsensi::with(['karyawan'])->where('keterangan', "=", $request->keterangan)->orderBy('created_at', 'DESC')->get();
@@ -131,3 +131,5 @@ class AbsensiCrudController extends Controller
         ], 200);
     }
 }
+
+//     Filter daily

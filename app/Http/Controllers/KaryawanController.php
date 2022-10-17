@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Karyawan;
+use App\Models\role;
+use App\Models\TrxAbsensi;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -12,18 +15,21 @@ use Symfony\Component\HttpFoundation\Response;
 class KaryawanController extends Controller
 {
 
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
+//    public function __construct()
+//    {
+//        $this->middleware('auth');
+//    }
     /**
      * Display a listing of the resource.
 
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index()
+    public function index(Request $request): \Illuminate\Http\JsonResponse
     {
-        $karyawan = Karyawan::all();
+        $perPage = $request->per_page;
+
+        $karyawan = Karyawan::all()->paginate($perPage);
+
 
         return response()->json([
             'message' => 'All data karyawan',
@@ -34,11 +40,47 @@ class KaryawanController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $validator = Validator::make(request()->all(), [
+            'nama' => ['required'],
+            'email' => ['required', 'email'],
+            'niy' => ['required', 'unique'],
+            'password' => ['required'],
+            'alamat' => ['required'],
+            'no_hp' => ['required'],
+            'role_id' => ['required'],
+        ]);
+
+        if ($validator->fails()){
+            return response()->json($validator->errors(), 422);
+        }
+
+        try {
+            $absensi = TrxAbsensi::create([
+                'nama' => $request->nama,
+                'email' => $request->email,
+                'niy' => $request->niy,
+                'password' => Hash::make($request->password),
+                'alamat' => $request->alamat,
+                'no_hp' => $request->no_hp,
+                'role_id' => $request->role_id,
+            ]);
+
+            $response = [
+                'status' => 'success',
+                'message' => 'Data Karyawan berhasil dibuat',
+                'data' => $absensi
+            ];
+
+            return response()->json($response, 200);
+        } catch (QueryException $e) {
+            return response()->json([
+                'message' => "Failed " . $e
+            ]);
+        }
     }
 
     /**
@@ -56,11 +98,17 @@ class KaryawanController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show(Request $request)
     {
+        $id = $request->id;
+        $karyawan = Karyawan::find($id);
 
+        return \response()->json([
+           'message' => "Detail Karyawan by id $id",
+           'data' => $karyawan
+        ]);
     }
 
     /**
@@ -71,7 +119,9 @@ class KaryawanController extends Controller
      */
     public function edit($id)
     {
-        //
+
+
+
     }
 
     /**
@@ -79,58 +129,65 @@ class KaryawanController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function update(Request $request, $id)
     {
-        //
+        $karyawan = Karyawan::find($id);
+
+        $validator = Validator::make(request()->all(), [
+            'nama' => ['required'],
+            'email' => ['required|email'],
+            'niy' => ['required', 'unique'],
+            'password' => ['password'],
+            'alamat' => ['required'],
+            'no_hp' => ['required'],
+            'role_id' => ['required'],
+        ]);
+
+        if ($validator->fails()){
+            return response()->json($validator->errors(), 422);
+        }
+
+        try {
+            $karyawan->update([
+                'nama' => $request->nama,
+                'email' => $request->email,
+                'niy' => $request->niy,
+                'password' => Hash::make($request->password),
+                'alamat' => $request->alamat,
+                'no_hp' => $request->no_hp,
+                'role_id' => $request->role_id,
+            ]);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Data berhasil diupdate',
+                'data' => $karyawan
+            ], 200);
+        } catch (QueryException $e) {
+            return response()->json([
+                'message' => "Failed " . $e
+            ]);
+        }
+
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy($id)
+    public function destroy(Request $request): \Illuminate\Http\JsonResponse
     {
-        //
-    }
+        $id = $request->id;
 
-    protected function resetPassword(Request $request): \Illuminate\Http\Response|\Illuminate\Http\JsonResponse|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory
-    {
-        $input = $request->only('old_password', 'new_password');
-        $validator = Validator::make($input, [
-            'old_password' => 'required',
-            'new_password' => 'required|different:password',
-        ]);
+        $karyawan = Karyawan::find($id);
+        $karyawan->delete();
 
-        $karyawan = Karyawan::find(Auth::user()->id);
-
-        if ($validator->fails()) {
-            return response(['errors'=>$validator->errors()->all()], 422);
-        }
-
-        if (Hash::check($request->old_password, $karyawan->password)) {
-            $karyawan->update([
-                'password' => Hash::make(request('new_password'))
-            ]);
-
-            $message = 'Password reset successfully';
-        } else {
-            $message = 'Failed to reset password';
-        }
-
-        $response = ['message' => $message, 'status' => 'Updated'];
-        return response()->json($response, 200);
-    }
-
-    public function me()
-    {
-        $data = Karyawan::find(Auth::user()->id);
         return response()->json([
-            'message' => 'Data Karyawan',
-            'data' => $data
-        ], Response::HTTP_OK);
+           'status' => 'success',
+           'message' => 'Karyawan berhasil dihapus'
+        ]);
     }
 }

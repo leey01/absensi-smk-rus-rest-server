@@ -10,14 +10,15 @@ class Karyawan extends Model
 {
     use HasApiTokens, HasFactory;
 
-    protected $fillable = ['id', 'nama', 'password', 'niy', 'email', 'alamat', 'no_hp', 'role_id', 'id_karyawan'];
+    protected $fillable = ['id', 'nama', 'password', 'niy', 'email', 'alamat', 'no_hp', 'role_id'];
 
 //    protected $hidden = [
 //        'password'
 //    ];
 
     public function User(){
-     return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class);
     }
+
 
 }
