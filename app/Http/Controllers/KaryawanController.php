@@ -24,11 +24,24 @@ class KaryawanController extends Controller
 
      * @return \Illuminate\Http\JsonResponse
      */
+
+    public function karyawan()
+    {
+        $per_page = 12;
+        $list = Karyawan::all()->paginate();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Data Karyawan',
+            'data' => $list
+        ]);
+    }
+
     public function index(Request $request): \Illuminate\Http\JsonResponse
     {
         $perPage = $request->per_page;
 
-        $karyawan = Karyawan::all()->paginate($perPage);
+        $karyawan = Karyawan::all();
 
 
         return response()->json([

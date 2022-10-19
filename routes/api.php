@@ -62,6 +62,7 @@ Route::get('/kehadiran/detail', [\App\Http\Controllers\KehadiranController::clas
 
 
 // Karyawan
+Route::get('karyawan', [KaryawanController::class, 'karyawan']);
 Route::get('karyawan/all-karyawan', [KaryawanController::class, 'index']);
 Route::post('karyawan/add-karyawan', [KaryawanController::class, 'create']);
 Route::post('karyawan/update-karyawan', [KaryawanController::class, 'update']);
