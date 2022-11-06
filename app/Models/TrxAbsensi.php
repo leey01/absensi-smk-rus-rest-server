@@ -16,7 +16,8 @@ class TrxAbsensi extends Model
         return $this->belongsTo(Karyawan::class, 'id_karyawan', 'id');
     }
 
-    public function Roles(){
+    public function Roles()
+    {
         return $this->belongsTo(role::class);
     }
 

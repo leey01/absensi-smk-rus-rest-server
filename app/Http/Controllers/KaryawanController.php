@@ -8,6 +8,7 @@ use App\Models\TrxAbsensi;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,23 +26,36 @@ class KaryawanController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
 
-    public function karyawan()
-    {
-        $per_page = 12;
-        $list = Karyawan::all()->paginate();
+//    public function index()
+//    {
+//        $per_page = 4;
+//        $list = DB::table('karyawans')->paginate($per_page);
+//
+//        return response()->json([
+//            'status' => 'success',
+//            'message' => 'Data Karyawan',
+//            'data' => $list
+//        ]);
+//    }
 
+    public function me()
+    {
+        $user = auth()->user();
         return response()->json([
-            'status' => 'success',
-            'message' => 'Data Karyawan',
-            'data' => $list
+            'message' => 'Profil User',
+            'data' => $user
         ]);
     }
 
-    public function index(Request $request): \Illuminate\Http\JsonResponse
+    public function karyawan(Request $request): \Illuminate\Http\JsonResponse
     {
         $perPage = $request->per_page;
 
-        $karyawan = Karyawan::all();
+        if ($perPage){
+            $karyawan = DB::table('karyawans')->paginate($perPage);
+        } else {
+            $karyawan = DB::table('karyawans')->get();
+        }
 
 
         return response()->json([
@@ -72,7 +86,7 @@ class KaryawanController extends Controller
         }
 
         try {
-            $absensi = TrxAbsensi::create([
+            $absensi = Karyawan::create([
                 'nama' => $request->nama,
                 'email' => $request->email,
                 'niy' => $request->niy,
@@ -118,7 +132,7 @@ class KaryawanController extends Controller
         $id = $request->id;
         $karyawan = Karyawan::find($id);
 
-        return \response()->json([
+        return response()->json([
            'message' => "Detail Karyawan by id $id",
            'data' => $karyawan
         ]);
