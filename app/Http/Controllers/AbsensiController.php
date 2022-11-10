@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\TrxAbsensi;
-use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class AbsensiController extends Controller
@@ -42,6 +43,7 @@ class AbsensiController extends Controller
         $validator = Validator::make(request()->all(), [
             'keterangan' => ['required'],
             'foto' => ['required'],
+            'catatan' => ['required'],
             'longitude' => ['required'],
             'latitude' => ['required'],
         ]);
@@ -50,11 +52,16 @@ class AbsensiController extends Controller
             return response()->json($validator->errors(), Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
+        //unix timestamp
+        $timestamp = time();
+
+        $path = Storage::disk('public')->put('fotos/'. $timestamp . $request->foto->getClientOriginalName(), file_get_contents($request->foto));
+
         try {
             $absensi = TrxAbsensi::create([
                 'keterangan' => $request->keterangan,
                 'catatan' => $request->catatan,
-                'foto' => $request->foto,
+                'foto' => $timestamp . $request->foto->getClientOriginalName(),
                 'longitude' => $request->longitude,
                 'latitude' => $request->latitude,
                 'id_karyawan' => Auth::user()->id,
