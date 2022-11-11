@@ -44,9 +44,9 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $user = User::where('email', $request->email)->first();
+        $user = Karyawan::where('niy', $request->niy)->first();
 
-        if ($user->email == $request->email && Hash::check($request->password, $user->password)){
+        if ($user->niy == $request->niy && Hash::check($request->password, $user->password)){
             $token = $user->createToken('token-name')->plainTextToken;
 
             return response()->json([
