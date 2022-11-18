@@ -56,13 +56,14 @@ Route::get('/kehadiran/jml-kehadiran', [\App\Http\Controllers\KehadiranControlle
 Route::post('/kehadiran/list-absensi', [\App\Http\Controllers\KehadiranController::class, 'listAbsensi']);
 Route::post('/kehadiran/search', [\App\Http\Controllers\KehadiranController::class, 'search']);
 Route::get('/kehadiran/detail', [\App\Http\Controllers\KehadiranController::class, 'detail']);
+Route::get('/kehadiran/export-excel', [\App\Http\Controllers\KehadiranController::class, 'exportKehadiran']);
 
 
 // Karyawan
 Route::get('karyawan', [KaryawanController::class, 'karyawan']);
 Route::get('karyawan/all-karyawan', [KaryawanController::class, 'karyawan']);
 Route::post('karyawan/add-karyawan', [KaryawanController::class, 'create']);
-Route::post('karyawan/update-karyawan', [KaryawanController::class, 'update']);
+Route::post('karyawan/update-karyawan/{id}', [KaryawanController::class, 'update']);
 Route::post('karyawan/delete-karyawan', [KaryawanController::class, 'destroy']);
 Route::post('karyawan/detail-karyawan', [KaryawanController::class, 'show']);
 
