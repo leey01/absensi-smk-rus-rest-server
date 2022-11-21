@@ -41,9 +41,14 @@ class KaryawanController extends Controller
     public function me()
     {
         $user = auth()->user();
+        $karyawan = Karyawan::find($user->id);
+
         return response()->json([
             'message' => 'Profil User',
-            'data' => $user
+            'data' => [
+                'user' => $user,
+                'karyawan' => $karyawan
+            ]
         ]);
     }
 

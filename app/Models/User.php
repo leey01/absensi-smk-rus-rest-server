@@ -35,6 +35,6 @@ class User extends Authenticatable
 
     public function karyawan()
     {
-        return $this->hasOne(Karyawan::class, 'id', 'id_karyawan');
+        return $this->belongsTo(Karyawan::class, 'id_karyawan', 'id');
     }
 }

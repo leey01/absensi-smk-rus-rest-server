@@ -20,7 +20,7 @@ class TrxAbsensiFactory extends Factory
             'id_karyawan' => mt_rand(1,5),
             'keterangan' => fake()->randomElement(['masuk' ,'pulang']),
             'catatan' => fake()->sentence(),
-            'waktu' => fake()->date('Y-m-d'),
+            'tanggal' => fake()->date('Y-m-d'),
             'foto' => 'fotos/'.fake()->word().'.png',
             'longitude' => fake()->randomNumber(7, true),
             'latitude' => fake()->randomNumber(7, true),
