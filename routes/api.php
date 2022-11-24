@@ -2,8 +2,9 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AbsensiController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AbsensiController;
+use App\Http\Controllers\KalenderController;
 use App\Http\Controllers\KaryawanController;
 
 
@@ -71,3 +72,10 @@ Route::post('karyawan/detail-karyawan', [KaryawanController::class, 'show']);
 Route::get('role/get-roles', [\App\Http\Controllers\RoleController::class, 'index']);
 Route::post('role/add-role', [\App\Http\Controllers\RoleController::class, 'create']);
 Route::get('role/delete-role', [\App\Http\Controllers\RoleController::class, 'destroy']);
+
+// Kalender
+Route::get('calendar/index', [KalenderController::class, 'index']);
+Route::post('calendar/create', [KalenderController::class, 'store']);
+Route::patch('calendar/update/{id}', [KalenderController::class, 'update']);
+Route::post('calendar/edit/{id}', [KalenderController::class, 'edit']);
+Route::delete('calendar/destroy/{id}', [KalenderController::class, 'destroy']);
