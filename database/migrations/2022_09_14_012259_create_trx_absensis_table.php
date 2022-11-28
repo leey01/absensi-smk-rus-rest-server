@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('id_karyawan')->constrained('karyawans');
             $table->enum('keterangan', ['masuk', 'pulang']);
             $table->text('catatan');
-            $table->timestamp('waktu');
+            $table->string('tanggal');
             $table->string('foto');
             $table->string('longitude');
             $table->string('latitude');

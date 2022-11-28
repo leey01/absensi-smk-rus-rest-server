@@ -17,11 +17,8 @@ return new class extends Migration
             $table->id();
             $table->string('nama');
             $table->string('email');
-            $table->string('niy')->unique();
-            $table->string('password');
             $table->string('alamat');
             $table->string('no_hp');
-            $table->foreignId('role_id')->constrained('roles');
             $table->timestamps();
         });
     }
