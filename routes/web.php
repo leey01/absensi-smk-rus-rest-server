@@ -17,4 +17,5 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/kehadiran/export-excel', [\App\Http\Controllers\KehadiranController::class, 'exportKehadiran']);
 

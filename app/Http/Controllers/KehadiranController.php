@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ExportKehadiran;
 use App\Models\Karyawan;
 use App\Models\TrxAbsensi;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\Calculation\MathTrig\Exp;
 
 class KehadiranController extends Controller
 {
@@ -179,4 +182,15 @@ class KehadiranController extends Controller
             'data' => $detailKehadiran
         ]);
     }
+
+    public function exportKehadiran(Request $request)
+    {
+        $start_time = $request->start_time;
+        $end_time = $request->end_time;
+        $keterangan = $request->keterangan;
+
+//        return Excel::download(new ExportKehadiran($start_time, $end_time, $keterangan), "datakehadiran$keterangan($start_time|$end_time).xlsx");
+        return (new ExportKehadiran($start_time, $end_time, $keterangan))->download("datakehadiran$keterangan($start_time|$end_time).xlsx");
+    }
+
 }
