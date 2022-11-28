@@ -105,6 +105,7 @@ class TrxAbsensi extends Model
         })->where('keterangan', 'masuk')
             ->get();
 
+
         return $list;
     }
 
