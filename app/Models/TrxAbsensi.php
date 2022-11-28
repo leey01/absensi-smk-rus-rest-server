@@ -16,10 +16,10 @@ class TrxAbsensi extends Model
         return $this->belongsTo(Karyawan::class, 'id_karyawan', 'id');
     }
 
-    public function Roles()
-    {
-        return $this->belongsTo(role::class);
-    }
+//    public function Roles()
+//    {
+//        return $this->belongsTo(role::class);
+//    }
 
     // list data today
     public static function listDataOneDay($startTime, $keterangan, $urutan)
@@ -104,6 +104,7 @@ class TrxAbsensi extends Model
             $q->where('role_id', 3);
         })->where('keterangan', 'masuk')
             ->get();
+
 
         return $list;
     }
