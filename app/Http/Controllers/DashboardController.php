@@ -30,13 +30,6 @@ class DashboardController extends Controller
         $jmlAbsen = $jmlKaryawan - $jmlMasuk;
 
 
-        /* Jumlah Staff dan Pengajar (Tanggal between)*/
-
-        $jmlMasukStaff = TrxAbsensi::listMasukStaff($startTime)
-            ->count();
-        $jmlMasukPengajar = TrxAbsensi::listMasukPengajar($startTime)
-            ->count();
-
         $response = response()->json([
            'status' => 'success',
            'message' => 'Response default Dashboard',
@@ -46,10 +39,6 @@ class DashboardController extends Controller
                    'jml_masuk' => $jmlMasuk,
                    'jml_pulang' => $jmlPulang,
                    'jml_absen' => $jmlAbsen
-               ],
-               'rekapan_kehadiran' => [
-                   'jml_masuk_staff' => $jmlMasukStaff,
-                   'jml_masuk_pengajar' => $jmlMasukPengajar
                ]
            ]
         ]);
