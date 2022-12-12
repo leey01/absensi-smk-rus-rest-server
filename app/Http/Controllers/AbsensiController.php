@@ -130,7 +130,10 @@ class AbsensiController extends Controller
 //    Filter Masuk Pulang
     public function listAbsensi(Request $request)
     {
-        $list = TrxAbsensi::with(['karyawan'])->where('keterangan', "=", $request->keterangan)->orderBy('created_at', 'DESC')->get();
+        $list = TrxAbsensi::with(['karyawan'])
+            ->where('keterangan', "=", $request->keterangan)
+            ->orderBy('created_at', 'DESC')
+            ->get();
 
         return response()->json([
             'message' => 'List Absensi Masuk',

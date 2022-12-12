@@ -16,6 +16,11 @@ class TrxAbsensi extends Model
         return $this->belongsTo(Karyawan::class, 'id_karyawan', 'id');
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id_user', 'id');
+    }
+
 //    public function Roles()
 //    {
 //        return $this->belongsTo(role::class);
@@ -100,9 +105,15 @@ class TrxAbsensi extends Model
 //            ->where('tanggal', '=', $startTime)
 //            ->orderBy('created_at', 'DESC');
 
-        $list = TrxAbsensi::whereHas('karyawan', function ($q) {
-            $q->where('role_id', 3);
+//        $list = TrxAbsensi::whereHas('karyawan', function ($q) {
+//            $q->where('role_id', 3);
+//        })->where('keterangan', 'masuk')
+//            ->get();
+
+        $list = TrxAbsensi::whereHas('user', function ($q) {
+            $q->hasRole('staff');
         })->where('keterangan', 'masuk')
+            ->where('tanggal', '=', $startTime)
             ->get();
 
 
@@ -111,9 +122,10 @@ class TrxAbsensi extends Model
 
     public static function listMasukPengajar($startTime)
     {
-        $list = TrxAbsensi::whereHas('karyawan', function ($q) {
-            $q->where('role_id', 4);
+        $list = TrxAbsensi::whereHas('user', function ($q) {
+            $q->hasRole('guru');
         })->where('keterangan', 'masuk')
+            ->where('tanggal', '=', $startTime)
             ->get();
 
         return $list;
